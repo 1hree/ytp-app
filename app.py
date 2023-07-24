@@ -32,7 +32,6 @@ def fetch_data():
 
     # Convert timestamps to UTC+7 timezone
     df['time'] = pd.to_datetime(df['time']).dt.tz_localize('UTC').dt.tz_convert('Asia/Bangkok')
-    df = df.drop("soil_moisture", axis=1)
     return df
 
 # Streamlit app code
