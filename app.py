@@ -39,6 +39,11 @@ def fetch_data():
 st.title('Sensor Data Visualization')
 st.subheader('Temperature and Humidity')
 
+# Add a refresh page button above the title
+if st.button('Refresh Data'):
+    df = fetch_data()
+    st.success('Data has been refreshed.')
+
 # Fetch the data
 df = fetch_data()
 
@@ -54,11 +59,6 @@ plt.legend(fontsize=10)
 plt.tight_layout()
 st.pyplot()
 
-# Add a refresh page button
-if st.button('Refresh Data'):
-    df = fetch_data()
-    st.success('Data has been refreshed.')
-
 # Streamlit app code for Soil Humidity plot
 st.subheader('Soil Humidity')
 
@@ -72,3 +72,6 @@ plt.title('Soil Humidity Variation over Time', fontsize=14)
 plt.legend(fontsize=10)
 plt.tight_layout()
 st.pyplot()
+
+# Disable the PyplotGlobalUseWarning
+st.set_option('deprecation.showPyplotGlobalUse', False)
