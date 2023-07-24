@@ -14,7 +14,10 @@ FROM "esp32_sensor_full"
 WHERE
 time >= now() - interval '10 minutes'
 AND
+time >= '2023-07-23T19:00:00Z' AND time <= '2023-07-25T20:30:00Z'
+AND
 ("humidity" IS NOT NULL OR "temperature" IS NOT NULL)"""
+
 
 # Define the query client
 query_client = FlightSQLClient(
