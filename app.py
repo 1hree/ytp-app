@@ -11,12 +11,7 @@ os.environ['INFLUXDB_TOKEN'] = 'mYeX6-jJvpS0Laxo9Ws-fwBuGiq2dMA-97QTCWOJNl6URXCL
 # Define the query
 query = """SELECT *
 FROM "esp32_sensor_full"
-WHERE
-time >= now() - interval '10 minutes'
-AND
-time >= '2023-07-24T12:55:14.983Z' AND time <= '2023-07-24T13:06:33.743Z'
-AND
-("humidity" IS NOT NULL OR "temperature" IS NOT NULL)"""
+"""
 
 
 # Define the query client
