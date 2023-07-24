@@ -10,7 +10,7 @@ os.environ['INFLUXDB_TOKEN'] = 'mYeX6-jJvpS0Laxo9Ws-fwBuGiq2dMA-97QTCWOJNl6URXCL
 
 # Define the query
 query = """SELECT *
-FROM "esp32_sensor"
+FROM "esp32_sensor_full"
 WHERE
 time >= now() - interval '10 minutes'
 AND
