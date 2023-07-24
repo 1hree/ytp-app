@@ -1,0 +1,5 @@
+pandas==1.5.3
+seaborn==0.12.2
+matplotlib==3.7.1
+influxdb-client==1.36.1
+flightsql-dbapi==0.2.1
