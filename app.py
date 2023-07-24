@@ -72,12 +72,15 @@ plt.legend(fontsize=10)
 plt.tight_layout()
 st.pyplot()
 
-# Streamlit app code for "is_human" plot
+#  Streamlit app code for "is_human" plot
 st.subheader('Is Human')
 
-# Plot bar chart for "is_human" column
+# Reformat the x-axis labels to display only date and time (DD HH:MM)
+df['time_formatted'] = df['time'].dt.strftime('%d %H:%M')
+
+# Plot bar chart for "is_human" column with formatted x-axis labels
 plt.figure(figsize=(10, 6))
-sns.barplot(x='time', y='is_human', data=df, color='orange', label='Is Human')
+sns.barplot(x='time_formatted', y='is_human', data=df, color='orange', label='Is Human')
 plt.xticks(rotation=45)
 plt.xlabel('Time (UTC+7)', fontsize=12)
 plt.ylabel('Is Human', fontsize=12)
@@ -85,4 +88,3 @@ plt.title('Is Human Detection over Time', fontsize=14)
 plt.legend(fontsize=10)
 plt.tight_layout()
 st.pyplot()
-
