@@ -23,33 +23,52 @@ query_client = FlightSQLClient(
     metadata={"bucket-name": "sensor_ytp"}
 )
 
-# Execute the query and convert to DataFrame
-info = query_client.execute(query)
-reader = query_client.do_get(info.endpoints[0].ticket)
-data = reader.read_all()
-df = data.to_pandas().sort_values(by="time")
+# Function to fetch data and process it
+def fetch_data():
+    info = query_client.execute(query)
+    reader = query_client.do_get(info.endpoints[0].ticket)
+    data = reader.read_all()
+    df = data.to_pandas().sort_values(by="time")
 
-# Convert timestamps to UTC+7 timezone
-df['time'] = pd.to_datetime(df['time']).dt.tz_localize('UTC').dt.tz_convert('Asia/Bangkok')
-df = df.drop("soil_moisture", axis=1)
+    # Convert timestamps to UTC+7 timezone
+    df['time'] = pd.to_datetime(df['time']).dt.tz_localize('UTC').dt.tz_convert('Asia/Bangkok')
+    df = df.drop("soil_moisture", axis=1)
+    return df
 
 # Streamlit app code
 st.title('Sensor Data Visualization')
-st.subheader('Temperature, Humidity, and Soil Humidity')
+st.subheader('Temperature and Humidity')
 
-# Plot line charts for temperature, humidity, and soil humidity
-fig, ax = plt.subplots(figsize=(10, 6))
-sns.lineplot(x='time', y='temperature', data=df, marker='o', markersize=5, color='blue', label='Temperature', ax=ax)
-sns.lineplot(x='time', y='humidity', data=df, marker='o', markersize=5, color='green', label='Humidity', ax=ax)
-sns.lineplot(x='time', y='soil_humid', data=df, marker='o', markersize=5, color='purple', label='Soil Humidity', ax=ax)
+# Fetch the data
+df = fetch_data()
+
+# Plot line chart for temperature and humidity
+plt.figure(figsize=(10, 6))
+sns.lineplot(x='time', y='temperature', data=df, marker='o', markersize=5, color='blue', label='Temperature')
+sns.lineplot(x='time', y='humidity', data=df, marker='o', markersize=5, color='green', label='Humidity')
 plt.xticks(rotation=45)
 plt.xlabel('Time (UTC+7)', fontsize=12)
 plt.ylabel('Values', fontsize=12)
-plt.title('Temperature, Humidity, and Soil Humidity Variation over Time', fontsize=14)
+plt.title('Temperature and Humidity Variation over Time', fontsize=14)
 plt.legend(fontsize=10)
 plt.tight_layout()
-st.pyplot(fig)
+st.pyplot()
 
-# Display the DataFrame
-st.subheader('Sensor Data')
-st.dataframe(df)
+# Add a refresh page button
+if st.button('Refresh Data'):
+    df = fetch_data()
+    st.success('Data has been refreshed.')
+
+# Streamlit app code for Soil Humidity plot
+st.subheader('Soil Humidity')
+
+# Plot line chart for soil humidity
+plt.figure(figsize=(10, 6))
+sns.lineplot(x='time', y='soil_humid', data=df, marker='o', markersize=5, color='purple', label='Soil Humidity')
+plt.xticks(rotation=45)
+plt.xlabel('Time (UTC+7)', fontsize=12)
+plt.ylabel('Soil Humidity', fontsize=12)
+plt.title('Soil Humidity Variation over Time', fontsize=14)
+plt.legend(fontsize=10)
+plt.tight_layout()
+st.pyplot()
