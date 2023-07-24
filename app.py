@@ -38,17 +38,17 @@ st.title('Sensor Data Visualization')
 st.subheader('Temperature, Humidity, and Soil Humidity')
 
 # Plot line charts for temperature, humidity, and soil humidity
-plt.figure(figsize=(10, 6))
-sns.lineplot(x='time', y='temperature', data=df, marker='o', markersize=5, color='blue', label='Temperature')
-sns.lineplot(x='time', y='humidity', data=df, marker='o', markersize=5, color='green', label='Humidity')
-sns.lineplot(x='time', y='soil_humid', data=df, marker='o', markersize=5, color='purple', label='Soil Humidity')
+fig, ax = plt.subplots(figsize=(10, 6))
+sns.lineplot(x='time', y='temperature', data=df, marker='o', markersize=5, color='blue', label='Temperature', ax=ax)
+sns.lineplot(x='time', y='humidity', data=df, marker='o', markersize=5, color='green', label='Humidity', ax=ax)
+sns.lineplot(x='time', y='soil_humid', data=df, marker='o', markersize=5, color='purple', label='Soil Humidity', ax=ax)
 plt.xticks(rotation=45)
 plt.xlabel('Time (UTC+7)', fontsize=12)
 plt.ylabel('Values', fontsize=12)
 plt.title('Temperature, Humidity, and Soil Humidity Variation over Time', fontsize=14)
 plt.legend(fontsize=10)
 plt.tight_layout()
-st.pyplot()
+st.pyplot(fig)
 
 # Display the DataFrame
 st.subheader('Sensor Data')
