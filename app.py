@@ -73,5 +73,17 @@ plt.legend(fontsize=10)
 plt.tight_layout()
 st.pyplot()
 
-# Disable the PyplotGlobalUseWarning
-st.set_option('deprecation.showPyplotGlobalUse', False)
+# Streamlit app code for "is_human" plot
+st.subheader('Is Human')
+
+# Plot bar chart for "is_human" column
+plt.figure(figsize=(10, 6))
+sns.barplot(x='time', y='is_human', data=df, color='orange', label='Is Human')
+plt.xticks(rotation=45)
+plt.xlabel('Time (UTC+7)', fontsize=12)
+plt.ylabel('Is Human', fontsize=12)
+plt.title('Is Human Detection over Time', fontsize=14)
+plt.legend(fontsize=10)
+plt.tight_layout()
+st.pyplot()
+
