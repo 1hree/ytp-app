@@ -12,7 +12,7 @@ os.environ['INFLUXDB_TOKEN'] = 'mYeX6-jJvpS0Laxo9Ws-fwBuGiq2dMA-97QTCWOJNl6URXCL
 query = """SELECT *
 FROM "esp32_sensor"
 WHERE
-time >= now() - interval '60 minutes'
+time >= now() - interval '10 minutes'
 AND
 ("humidity" IS NOT NULL OR "temperature" IS NOT NULL)"""
 
