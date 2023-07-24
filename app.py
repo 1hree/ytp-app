@@ -76,7 +76,7 @@ st.pyplot()
 st.subheader('Is Human')
 
 # Reformat the x-axis labels to display only date and time (DD HH:MM)
-df['time_formatted'] = df['time'].dt.strftime('%d %H:%M')
+df['time_formatted'] = df['time'].dt.strftime('%d %H:%M:%S')
 
 # Plot bar chart for "is_human" column with formatted x-axis labels
 plt.figure(figsize=(10, 6))
