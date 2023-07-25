@@ -110,6 +110,11 @@ plt.legend(fontsize=10)
 plt.tight_layout()
 st.pyplot()
 
+# if there's no anomaly, show a message instread of plot
+if df['anomaly_temperature'].sum() == 0 and df['anomaly_humidity'].sum() == 0:
+    st.subheader('No anomaly detected.')
+    st.stop()
+
 # Add header
 st.subheader('Anomaly Detection')
 
