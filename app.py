@@ -110,6 +110,9 @@ plt.legend(fontsize=10)
 plt.tight_layout()
 st.pyplot()
 
+# Add header
+st.subheader('Anomaly Detection')
+
 # plot 100% stacked bar chart for anomaly flags vs normal values
 plt.figure(figsize=(10, 6))
 
