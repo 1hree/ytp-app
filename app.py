@@ -32,6 +32,13 @@ def fetch_data():
     df['time'] = pd.to_datetime(df['time']).dt.tz_localize('UTC').dt.tz_convert('Asia/Bangkok')
     return df
 
+# Function to calculate the percentage of anomalies in the 'is_human' column
+def calculate_anomaly_percentage(df):
+    total_data_points = len(df)
+    total_anomalies = df['is_human'].sum()
+    percentage_anomalies = (total_anomalies / total_data_points) * 100
+    return percentage_anomalies
+
 # Streamlit app code
 st.title('Sensor Data Visualization')
 st.subheader('Temperature and Humidity')
@@ -97,3 +104,17 @@ plt.title('Is Human Detection over Time', fontsize=14)
 plt.legend(fontsize=10)
 plt.tight_layout()
 st.pyplot()
+
+# Calculate percentage of anomalies
+anomaly_percentage = calculate_anomaly_percentage(df)
+
+# Display the percentage of anomalies using a 100% stacked bar chart
+st.write('### Anomaly Detection')
+fig, ax = plt.subplots(figsize=(8, 4))
+sns.barplot(x=['Anomaly', 'Normal'], y=[anomaly_percentage, 100 - anomaly_percentage], palette=['red', 'green'])
+plt.xlabel('Status', fontsize=12)
+plt.ylabel('Percentage', fontsize=12)
+plt.title('Percentage of Anomaly Detection', fontsize=14)
+plt.ylim(0, 100)
+plt.tight_layout()
+st.pyplot(fig)
