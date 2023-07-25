@@ -110,4 +110,23 @@ plt.legend(fontsize=10)
 plt.tight_layout()
 st.pyplot()
 
+# plot 100% stacked bar chart for anomaly flags vs normal values
+plt.figure(figsize=(10, 6))
+
+# Plot anomaly flags
+sns.barplot(x='time_formatted', y='anomaly_temperature_numeric', data=df, color='red', label='Temperature Anomaly')
+sns.barplot(x='time_formatted', y='anomaly_humidity_numeric', data=df, color='blue', label='Humidity Anomaly')
+
+# Plot normal values
+sns.barplot(x='time_formatted', y='temperature', data=df, color='red', alpha=0.2)
+sns.barplot(x='time_formatted', y='humidity', data=df, color='blue', alpha=0.2)
+
+plt.xticks(rotation=45)
+plt.xlabel('Time (UTC+7)', fontsize=12)
+plt.ylabel('Anomaly', fontsize=12)
+plt.title('Anomaly Detection over Time', fontsize=14)
+plt.legend(fontsize=10)
+plt.tight_layout()
+st.pyplot()
+
 
