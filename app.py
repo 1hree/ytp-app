@@ -7,6 +7,7 @@ from flightsql import FlightSQLClient
 
 # Set InfluxDB token
 os.environ['INFLUXDB_TOKEN'] = 'mYeX6-jJvpS0Laxo9Ws-fwBuGiq2dMA-97QTCWOJNl6URXCLdlrmPIqHTWnnq8E4NDMnNWy4JO7bsbXoAnjrTQ=='
+st.set_option('deprecation.showPyplotGlobalUse', False)
 
 # Define the query
 query = """SELECT *
