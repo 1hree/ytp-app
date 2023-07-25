@@ -43,6 +43,12 @@ average_temperature = df['temperature'].mean()
 average_humidity = df['humidity'].mean()
 average_soil_humidity = df['soil_humid'].mean()
 
+# Calculate the anomaly flags based on a threshold (example: 5% deviation)
+threshold_percentage = 5
+df['anomaly_temperature'] = (df['temperature'] - average_temperature).abs() > (average_temperature * threshold_percentage / 100)
+df['anomaly_humidity'] = (df['humidity'] - average_humidity).abs() > (average_humidity * threshold_percentage / 100)
+df['anomaly_soil_humidity'] = (df['soil_humid'] - average_soil_humidity).abs() > (average_soil_humidity * threshold_percentage / 100)
+
 # Display the average values on top of the app
 col1, col2, col3 = st.columns(3)
 col1.metric("Temperature", f"{average_temperature:.2f} °C", "1.2 °C")
@@ -96,3 +102,23 @@ plt.title('Is Human Detection over Time', fontsize=14)
 plt.legend(fontsize=10)
 plt.tight_layout()
 st.pyplot()
+
+# Plot anomaly line plot
+plt.figure(figsize=(10, 6))
+sns.lineplot(x='time', y='anomaly_temperature', data=df, marker='o', markersize=5, color='red', label='Anomaly (Temperature)')
+sns.lineplot(x='time', y='anomaly_humidity', data=df, marker='o', markersize=5, color='orange', label='Anomaly (Humidity)')
+sns.lineplot(x='time', y='anomaly_soil_humidity', data=df, marker='o', markersize=5, color='purple', label='Anomaly (Soil Humidity)')
+plt.xticks(rotation=45)
+plt.xlabel('Time (UTC+7)', fontsize=12)
+plt.ylabel('Anomaly', fontsize=12)
+plt.title('Anomaly Detection over Time', fontsize=14)
+plt.legend(fontsize=10)
+plt.tight_layout()
+st.pyplot()
+
+# Group data by 5-minute intervals and calculate the count of anomalies
+anomaly_data_count = df.groupby(pd.Grouper(key='time', freq='5Min'))[['anomaly_temperature', 'anomaly_humidity', 'anomaly_soil_humidity']].sum()
+
+# Plot 100% stacked bar chart for count of anomalies
+st.subheader('Count of Anomalies Every 5 Minutes')
+st.bar_chart(anomaly_data_count, width=0, height=300, stacked=True)
