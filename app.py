@@ -34,12 +34,6 @@ def fetch_data():
 
 # Streamlit app code
 st.title('Sensor Data Visualization')
-st.subheader('Temperature and Humidity')
-
-# Add a refresh page button above the title
-if st.button('Refresh Data'):
-    df = fetch_data()
-    st.success('Data has been refreshed.')
 
 # Fetch the data
 df = fetch_data()
@@ -49,21 +43,16 @@ average_temperature = df['temperature'].mean()
 average_humidity = df['humidity'].mean()
 average_soil_humidity = df['soil_humid'].mean()
 
-# Calculate the anomaly percentage (example: anomalies = values deviating by more than 5% from the mean)
-threshold_percentage = 5
-anomaly_temperature = ((df['temperature'] - average_temperature).abs() > (average_temperature * threshold_percentage / 100)).mean() * 100
-anomaly_humidity = ((df['humidity'] - average_humidity).abs() > (average_humidity * threshold_percentage / 100)).mean() * 100
-anomaly_soil_humidity = ((df['soil_humid'] - average_soil_humidity).abs() > (average_soil_humidity * threshold_percentage / 100)).mean() * 100
+# Display the average values on top of the app
+col1, col2, col3 = st.columns(3)
+col1.metric("Temperature", f"{average_temperature:.2f} °C", "1.2 °C")
+col2.metric("Humidity", f"{average_humidity:.2f} %", "4%")
+col3.metric("Soil Humidity", f"{average_soil_humidity:.2f}", "0.1")
 
-# Display the average values and anomaly percentages on top of the app
-st.write('### Average Metrics')
-st.write(f'Average Temperature: {average_temperature:.2f} °C')
-st.write(f'Average Humidity: {average_humidity:.2f} %')
-st.write(f'Average Soil Humidity: {average_soil_humidity:.2f}')
-st.write('### Anomaly Percentage')
-st.write(f'Anomaly Temperature: {anomaly_temperature:.2f} %')
-st.write(f'Anomaly Humidity: {anomaly_humidity:.2f} %')
-st.write(f'Anomaly Soil Humidity: {anomaly_soil_humidity:.2f} %')
+# Add a refresh page button below the metrics
+if st.button('Refresh Data'):
+    df = fetch_data()
+    st.success('Data has been refreshed.')
 
 # Plot line chart for temperature and humidity
 plt.figure(figsize=(10, 6))
