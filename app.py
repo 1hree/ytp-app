@@ -49,6 +49,11 @@ df['anomaly_temperature'] = (df['temperature'] - average_temperature).abs() > (a
 df['anomaly_humidity'] = (df['humidity'] - average_humidity).abs() > (average_humidity * threshold_percentage / 100)
 df['anomaly_soil_humidity'] = (df['soil_humid'] - average_soil_humidity).abs() > (average_soil_humidity * threshold_percentage / 100)
 
+# Convert True/False values to numeric representation (1 for True, 0 for False)
+df['anomaly_temperature_numeric'] = df['anomaly_temperature'].astype(int)
+df['anomaly_humidity_numeric'] = df['anomaly_humidity'].astype(int)
+df['anomaly_soil_humidity_numeric'] = df['anomaly_soil_humidity'].astype(int)
+
 # Display the average values on top of the app
 col1, col2, col3 = st.columns(3)
 col1.metric("Temperature", f"{average_temperature:.2f} °C", "1.2 °C")
@@ -105,9 +110,9 @@ st.pyplot()
 
 # Plot anomaly line plot
 plt.figure(figsize=(10, 6))
-sns.lineplot(x='time', y='anomaly_temperature', data=df, marker='o', markersize=5, color='red', label='Anomaly (Temperature)')
-sns.lineplot(x='time', y='anomaly_humidity', data=df, marker='o', markersize=5, color='orange', label='Anomaly (Humidity)')
-sns.lineplot(x='time', y='anomaly_soil_humidity', data=df, marker='o', markersize=5, color='purple', label='Anomaly (Soil Humidity)')
+sns.lineplot(x='time', y='anomaly_temperature_numeric', data=df, marker='o', markersize=5, color='red', label='Anomaly (Temperature)')
+sns.lineplot(x='time', y='anomaly_humidity_numeric', data=df, marker='o', markersize=5, color='orange', label='Anomaly (Humidity)')
+sns.lineplot(x='time', y='anomaly_soil_humidity_numeric', data=df, marker='o', markersize=5, color='purple', label='Anomaly (Soil Humidity)')
 plt.xticks(rotation=45)
 plt.xlabel('Time (UTC+7)', fontsize=12)
 plt.ylabel('Anomaly', fontsize=12)
@@ -117,7 +122,7 @@ plt.tight_layout()
 st.pyplot()
 
 # Group data by 5-minute intervals and calculate the count of anomalies
-anomaly_data_count = df.groupby(pd.Grouper(key='time', freq='5Min'))[['anomaly_temperature', 'anomaly_humidity', 'anomaly_soil_humidity']].sum()
+anomaly_data_count = df.groupby(pd.Grouper(key='time', freq='5Min'))[['anomaly_temperature_numeric', 'anomaly_humidity_numeric', 'anomaly_soil_humidity_numeric']].sum()
 
 # Plot 100% stacked bar chart for count of anomalies
 st.subheader('Count of Anomalies Every 5 Minutes')
