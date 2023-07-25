@@ -108,21 +108,8 @@ plt.legend(fontsize=10)
 plt.tight_layout()
 st.pyplot()
 
-# Plot anomaly line plot
-plt.figure(figsize=(10, 6))
-sns.lineplot(x='time', y=df['anomaly_temperature_numeric'], data=df, marker='o', markersize=5, color='red', label='Anomaly (Temperature)')
-sns.lineplot(x='time', y=df['anomaly_humidity_numeric'], data=df, marker='o', markersize=5, color='orange', label='Anomaly (Humidity)')
-sns.lineplot(x='time', y=df['anomaly_soil_humidity_numeric'], data=df, marker='o', markersize=5, color='purple', label='Anomaly (Soil Humidity)')
-plt.xticks(rotation=45)
-plt.xlabel('Time (UTC+7)', fontsize=12)
-plt.ylabel('Anomaly', fontsize=12)
-plt.title('Anomaly Detection over Time', fontsize=14)
-plt.legend(fontsize=10)
-plt.tight_layout()
-st.pyplot()
-
 # Group data by 5-minute intervals and calculate the count of anomalies
-anomaly_data_count = df.groupby(pd.Grouper(key='time', freq='5Min'))[['anomaly_temperature_numeric', 'anomaly_humidity_numeric', 'anomaly_soil_humidity_numeric']].sum()
+anomaly_data_count = df.groupby(pd.Grouper(key='time', freq='5Min'))[['anomaly_temperature', 'anomaly_humidity', 'anomaly_soil_humidity']].sum()
 
 # Calculate percentage of anomalies
 total_anomaly_count = anomaly_data_count.sum(axis=1)
