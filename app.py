@@ -32,13 +32,6 @@ def fetch_data():
     df['time'] = pd.to_datetime(df['time']).dt.tz_localize('UTC').dt.tz_convert('Asia/Bangkok')
     return df
 
-# Function to calculate the percentage of anomalies in the 'is_human' column
-def calculate_anomaly_percentage(df):
-    total_data_points = len(df)
-    total_anomalies = df['is_human'].sum()
-    percentage_anomalies = (total_anomalies / total_data_points) * 100
-    return percentage_anomalies
-
 # Streamlit app code
 st.title('Sensor Data Visualization')
 st.subheader('Temperature and Humidity')
@@ -56,11 +49,21 @@ average_temperature = df['temperature'].mean()
 average_humidity = df['humidity'].mean()
 average_soil_humidity = df['soil_humid'].mean()
 
-# Display the average values on top of the app
+# Calculate the anomaly percentage (example: anomalies = values deviating by more than 5% from the mean)
+threshold_percentage = 5
+anomaly_temperature = ((df['temperature'] - average_temperature).abs() > (average_temperature * threshold_percentage / 100)).mean() * 100
+anomaly_humidity = ((df['humidity'] - average_humidity).abs() > (average_humidity * threshold_percentage / 100)).mean() * 100
+anomaly_soil_humidity = ((df['soil_humid'] - average_soil_humidity).abs() > (average_soil_humidity * threshold_percentage / 100)).mean() * 100
+
+# Display the average values and anomaly percentages on top of the app
 st.write('### Average Metrics')
 st.write(f'Average Temperature: {average_temperature:.2f} °C')
 st.write(f'Average Humidity: {average_humidity:.2f} %')
 st.write(f'Average Soil Humidity: {average_soil_humidity:.2f}')
+st.write('### Anomaly Percentage')
+st.write(f'Anomaly Temperature: {anomaly_temperature:.2f} %')
+st.write(f'Anomaly Humidity: {anomaly_humidity:.2f} %')
+st.write(f'Anomaly Soil Humidity: {anomaly_soil_humidity:.2f} %')
 
 # Plot line chart for temperature and humidity
 plt.figure(figsize=(10, 6))
@@ -104,17 +107,3 @@ plt.title('Is Human Detection over Time', fontsize=14)
 plt.legend(fontsize=10)
 plt.tight_layout()
 st.pyplot()
-
-# Calculate percentage of anomalies
-anomaly_percentage = calculate_anomaly_percentage(df)
-
-# Display the percentage of anomalies using a 100% stacked bar chart
-st.write('### Anomaly Detection')
-fig, ax = plt.subplots(figsize=(8, 4))
-sns.barplot(x=['Anomaly', 'Normal'], y=[anomaly_percentage, 100 - anomaly_percentage], palette=['red', 'green'])
-plt.xlabel('Status', fontsize=12)
-plt.ylabel('Percentage', fontsize=12)
-plt.title('Percentage of Anomaly Detection', fontsize=14)
-plt.ylim(0, 100)
-plt.tight_layout()
-st.pyplot(fig)
