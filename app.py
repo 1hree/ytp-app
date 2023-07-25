@@ -44,6 +44,17 @@ if st.button('Refresh Data'):
 # Fetch the data
 df = fetch_data()
 
+# Calculate the average values
+average_temperature = df['temperature'].mean()
+average_humidity = df['humidity'].mean()
+average_soil_humidity = df['soil_humid'].mean()
+
+# Display the average values on top of the app
+st.write('### Average Metrics')
+st.write(f'Average Temperature: {average_temperature:.2f} °C')
+st.write(f'Average Humidity: {average_humidity:.2f} %')
+st.write(f'Average Soil Humidity: {average_soil_humidity:.2f}')
+
 # Plot line chart for temperature and humidity
 plt.figure(figsize=(10, 6))
 sns.lineplot(x='time', y='temperature', data=df, marker='o', markersize=5, color='blue', label='Temperature')
