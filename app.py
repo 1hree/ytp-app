@@ -110,9 +110,9 @@ st.pyplot()
 
 # Plot anomaly line plot
 plt.figure(figsize=(10, 6))
-sns.lineplot(x='time', y='anomaly_temperature_numeric', data=df, marker='o', markersize=5, color='red', label='Anomaly (Temperature)')
-sns.lineplot(x='time', y='anomaly_humidity_numeric', data=df, marker='o', markersize=5, color='orange', label='Anomaly (Humidity)')
-sns.lineplot(x='time', y='anomaly_soil_humidity_numeric', data=df, marker='o', markersize=5, color='purple', label='Anomaly (Soil Humidity)')
+sns.lineplot(x='time', y=df['anomaly_temperature_numeric'], data=df, marker='o', markersize=5, color='red', label='Anomaly (Temperature)')
+sns.lineplot(x='time', y=df['anomaly_humidity_numeric'], data=df, marker='o', markersize=5, color='orange', label='Anomaly (Humidity)')
+sns.lineplot(x='time', y=df['anomaly_soil_humidity_numeric'], data=df, marker='o', markersize=5, color='purple', label='Anomaly (Soil Humidity)')
 plt.xticks(rotation=45)
 plt.xlabel('Time (UTC+7)', fontsize=12)
 plt.ylabel('Anomaly', fontsize=12)
