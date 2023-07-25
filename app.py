@@ -109,7 +109,7 @@ plt.tight_layout()
 st.pyplot()
 
 # Group data by 5-minute intervals and calculate the count of anomalies
-anomaly_data_count = df.groupby(pd.Grouper(key='time', freq='5Min'))[['anomaly_temperature', 'anomaly_humidity', 'anomaly_soil_humidity']].sum()
+anomaly_data_count = df.groupby(pd.Grouper(key='time', freq='5Min'))[['anomaly_temperature_numeric', 'anomaly_humidity_numeric', 'anomaly_soil_humidity_numeric']].sum()
 
 # Calculate percentage of anomalies
 total_anomaly_count = anomaly_data_count.sum(axis=1)
