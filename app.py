@@ -109,22 +109,4 @@ plt.legend(fontsize=10)
 plt.tight_layout()
 st.pyplot()
 
-print(df.columns)
 
-# Group data by 5-minute intervals and calculate the count of anomalies
-anomaly_data_count = df.groupby(pd.Grouper(key='time', freq='5Min'))[['anomaly_temperature_numeric', 'anomaly_humidity_numeric', 'anomaly_soil_humidity_numeric']].sum()
-
-# Calculate percentage of anomalies
-total_anomaly_count = anomaly_data_count.sum(axis=1)
-anomaly_data_percentage = anomaly_data_count.div(total_anomaly_count, axis=0) * 100
-
-# Plot 100% stacked bar chart for count of anomalies
-plt.figure(figsize=(10, 6))
-anomaly_data_percentage.plot(kind='bar', stacked=True, width=0.8)
-plt.xticks(rotation=45)
-plt.xlabel('Time (UTC+7)', fontsize=12)
-plt.ylabel('Percentage of Anomalies', fontsize=12)
-plt.title('Percentage of Anomalies Every 5 Minutes', fontsize=14)
-plt.legend(loc='upper left', fontsize=10)
-plt.tight_layout()
-st.pyplot()
