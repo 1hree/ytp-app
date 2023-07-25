@@ -108,6 +108,8 @@ plt.legend(fontsize=10)
 plt.tight_layout()
 st.pyplot()
 
+print(df.columns)
+
 # Group data by 5-minute intervals and calculate the count of anomalies
 anomaly_data_count = df.groupby(pd.Grouper(key='time', freq='5Min'))[['anomaly_temperature_numeric', 'anomaly_humidity_numeric', 'anomaly_soil_humidity_numeric']].sum()
 
