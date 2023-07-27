@@ -66,11 +66,12 @@ class SessionState:
 # Create or get the SessionState object
 session_state = SessionState()
 
+
 # Calculate the changes
-if session_state.prev_average_temperature is not None:
-    temperature_change = average_temperature - session_state.prev_average_temperature
-    humidity_change = average_humidity - session_state.prev_average_humidity
-    soil_humidity_change = average_soil_humidity - session_state.prev_average_soil_humidity
+if 'prev_average_temperature' in st.session_state:
+    temperature_change = average_temperature - st.session_state.prev_average_temperature
+    humidity_change = average_humidity - st.session_state.prev_average_humidity
+    soil_humidity_change = average_soil_humidity - st.session_state.prev_average_soil_humidity
 else:
     # If there are no previous values, set the changes to 0 for the first run
     temperature_change = 0.0
@@ -78,15 +79,16 @@ else:
     soil_humidity_change = 0.0
 
 # Update the previous average values in the session state
-session_state.prev_average_temperature = average_temperature
-session_state.prev_average_humidity = average_humidity
-session_state.prev_average_soil_humidity = average_soil_humidity
+st.session_state.prev_average_temperature = average_temperature
+st.session_state.prev_average_humidity = average_humidity
+st.session_state.prev_average_soil_humidity = average_soil_humidity
 
 # Display the average values on top of the app
 col1, col2, col3 = st.columns(3)
 col1.metric("Temperature", f"{average_temperature:.2f} °C", f"{temperature_change:+.2f} °C")
 col2.metric("Humidity", f"{average_humidity:.2f} %", f"{humidity_change:+.1f} %")
 col3.metric("Soil Humidity", f"{average_soil_humidity:.2f}", f"{soil_humidity_change:+.1f}")
+
 
 # Add a refresh page button below the metrics
 if st.button('Refresh Data'):
