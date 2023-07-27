@@ -4,6 +4,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import streamlit as st
 from flightsql import FlightSQLClient
+import Adafruit_DHT
 
 # Set InfluxDB token
 os.environ['INFLUXDB_TOKEN'] = 'mYeX6-jJvpS0Laxo9Ws-fwBuGiq2dMA-97QTCWOJNl6URXCLdlrmPIqHTWnnq8E4NDMnNWy4JO7bsbXoAnjrTQ=='
@@ -34,16 +35,32 @@ def fetch_data():
     df['time'] = pd.to_datetime(df['time']).dt.tz_localize('UTC').dt.tz_convert('Asia/Bangkok')
     return df
 
+# Function to fetch data from DHT22 sensor
+def read_dht22_sensor():
+    pin = 4  # Assuming the DHT22 sensor is connected to GPIO pin 4
+    sensor = Adafruit_DHT.DHT22
+    humidity, temperature = Adafruit_DHT.read_retry(sensor, pin)
+    return humidity, temperature
+
 # Streamlit app code
 st.title('Sensor Data Visualization')
 
-# Fetch the data
-df = fetch_data()
+# Fetch the data from InfluxDB
+df_influxdb = fetch_data()
 
-# Calculate the average values
-average_temperature = df['temperature'].mean()
-average_humidity = df['humidity'].mean()
-average_soil_humidity = df['soil_humid'].mean()
+# Read data from the DHT22 sensor
+humidity_dht22, temperature_dht22 = read_dht22_sensor()
+
+# Add DHT22 data to the dataframe
+current_time = pd.Timestamp.now(tz='Asia/Bangkok')
+df_dht22 = pd.DataFrame({'time': [current_time], 'temperature': [temperature_dht22], 'humidity': [humidity_dht22]})
+
+# Combine InfluxDB data and DHT22 data
+df_combined = pd.concat([df_influxdb, df_dht22], ignore_index=True)
+
+# Calculate the average values from the combined data
+average_temperature = df_combined['temperature'].mean()
+average_humidity = df_combined['humidity'].mean()
 
 # Calculate the anomaly flags based on a threshold (example: 5% deviation)
 threshold_percentage = 5
@@ -67,10 +84,10 @@ if st.button('Refresh Data'):
     df = fetch_data()
     st.success('Data has been refreshed.')
 
-# Plot line chart for temperature and humidity
+# Plot line chart for temperature and humidity from the combined data
 plt.figure(figsize=(10, 6))
-sns.lineplot(x='time', y='temperature', data=df, marker='o', markersize=5, color='blue', label='Temperature')
-sns.lineplot(x='time', y='humidity', data=df, marker='o', markersize=5, color='green', label='Humidity')
+sns.lineplot(x='time', y='temperature', data=df_combined, marker='o', markersize=5, color='blue', label='Temperature')
+sns.lineplot(x='time', y='humidity', data=df_combined, marker='o', markersize=5, color='green', label='Humidity')
 plt.xticks(rotation=45)
 plt.xlabel('Time (UTC+7)', fontsize=12)
 plt.ylabel('Values', fontsize=12)
