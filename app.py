@@ -37,7 +37,7 @@ def fetch_data():
 
 # Function to fetch data from DHT22 sensor
 def read_dht22_sensor():
-    pin = 4  # Assuming the DHT22 sensor is connected to GPIO pin 4
+    pin = 16  # Assuming the DHT22 sensor is connected to GPIO pin 4
     sensor = Adafruit_DHT.DHT22
     humidity, temperature = Adafruit_DHT.read_retry(sensor, pin)
     return humidity, temperature
