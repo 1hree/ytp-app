@@ -56,11 +56,22 @@ df['anomaly_temperature_numeric'] = df['anomaly_temperature'].astype(int)
 df['anomaly_humidity_numeric'] = df['anomaly_humidity'].astype(int)
 df['anomaly_soil_humidity_numeric'] = df['anomaly_soil_humidity'].astype(int)
 
+# Calculate the changes
+if session_state.prev_average_temperature is not None:
+    temperature_change = average_temperature - session_state.prev_average_temperature
+    humidity_change = average_humidity - session_state.prev_average_humidity
+    soil_humidity_change = average_soil_humidity - session_state.prev_average_soil_humidity
+else:
+    # If there are no previous values, set the changes to 0 for the first run
+    temperature_change = 0.0
+    humidity_change = 0.0
+    soil_humidity_change = 0.0
+
 # Display the average values on top of the app
 col1, col2, col3 = st.columns(3)
-col1.metric("Temperature", f"{average_temperature:.2f} °C", "1.2 °C")
-col2.metric("Humidity", f"{average_humidity:.2f} %", "4%")
-col3.metric("Soil Humidity", f"{average_soil_humidity:.2f}", "0.1")
+col1.metric("Temperature", f"{average_temperature:.2f} °C", f"{temperature_change:+.2f} °C")
+col2.metric("Humidity", f"{average_humidity:.2f} %", f"{humidity_change:+.1f} %")
+col3.metric("Soil Humidity", f"{average_soil_humidity:.2f}", f"{soil_humidity_change:+.1f}")
 
 # Add a refresh page button below the metrics
 if st.button('Refresh Data'):
