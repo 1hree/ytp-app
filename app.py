@@ -6,7 +6,7 @@ import streamlit as st
 from flightsql import FlightSQLClient
 
 # Set InfluxDB token
-os.environ['INFLUXDB_TOKEN'] = 'nlB-BNXCJm4vE-fjamTw26-gDDrsWRb3Q18DudUtJllLMnAOj3R5QcTiWCy10M8gR0mRO4dXZXug_SbCYLeuBQ=='
+os.environ['INFLUXDB_TOKEN'] = 'TVxrO67iNliiFFBeClg_SrYiBE8PNxIkgUHrBE5JfqzUWe6dnt44E3brRt8WsMFnU26D09Ab04Leo8IHWeWADg=='
 st.set_option('deprecation.showPyplotGlobalUse', False)
 
 # Define the query
