@@ -45,58 +45,16 @@ average_temperature = df['temperature'].mean()
 average_humidity = df['humidity'].mean()
 average_soil_humidity = df['soil_humid'].mean()
 
-# Calculate the anomaly flags based on a threshold (example: 5% deviation)
-threshold_percentage = 5
-df['anomaly_temperature'] = (df['temperature'] - average_temperature).abs() > (average_temperature * threshold_percentage / 100)
-df['anomaly_humidity'] = (df['humidity'] - average_humidity).abs() > (average_humidity * threshold_percentage / 100)
-df['anomaly_soil_humidity'] = (df['soil_humid'] - average_soil_humidity).abs() > (average_soil_humidity * threshold_percentage / 100)
+# Get the average values from 5 minutes ago
+previous_data = fetch_data()  # Fetch data from 5 minutes ago
+previous_average_temperature = previous_data['temperature'].mean()
+previous_average_humidity = previous_data['humidity'].mean()
+previous_average_soil_humidity = previous_data['soil_humid'].mean()
 
-# Convert True/False values to numeric representation (1 for True, 0 for False)
-df['anomaly_temperature_numeric'] = df['anomaly_temperature'].astype(int)
-df['anomaly_humidity_numeric'] = df['anomaly_humidity'].astype(int)
-df['anomaly_soil_humidity_numeric'] = df['anomaly_soil_humidity'].astype(int)
-
-# Define the SessionState class
-class SessionState:
-    def __init__(self):
-        self.average_temperatures = []  # List to store the last five average temperatures
-        self.average_humidities = []   # List to store the last five average humidities
-        self.average_soil_humidities = []  # List to store the last five average soil humidities
-
-    def add_data_point(self, average_temperature, average_humidity, average_soil_humidity):
-        self.average_temperatures.append(average_temperature)
-        self.average_humidities.append(average_humidity)
-        self.average_soil_humidities.append(average_soil_humidity)
-
-        # Keep only the last five data points
-        if len(self.average_temperatures) > 5:
-            self.average_temperatures.pop(0)
-            self.average_humidities.pop(0)
-            self.average_soil_humidities.pop(0)
-
-    def get_average_values(self):
-        # Calculate the average of the last five data points for each metric
-        average_temperature = sum(self.average_temperatures) / len(self.average_temperatures)
-        average_humidity = sum(self.average_humidities) / len(self.average_humidities)
-        average_soil_humidity = sum(self.average_soil_humidities) / len(self.average_soil_humidities)
-        return average_temperature, average_humidity, average_soil_humidity
-
-# Create or get the SessionState object
-session_state = SessionState()
-
-# Add the current data point to the SessionState
-session_state.add_data_point(average_temperature, average_humidity, average_soil_humidity)
-
-# Calculate the changes
-if len(session_state.average_temperatures) == 5:
-    temperature_change = average_temperature - session_state.average_temperatures[0]
-    humidity_change = average_humidity - session_state.average_humidities[0]
-    soil_humidity_change = average_soil_humidity - session_state.average_soil_humidities[0]
-else:
-    # If there are not enough data points yet, set the changes to 0
-    temperature_change = 0.0
-    humidity_change = 0.0
-    soil_humidity_change = 0.0
+# Calculate the changes from 5 minutes ago to now
+temperature_change = average_temperature - previous_average_temperature
+humidity_change = average_humidity - previous_average_humidity
+soil_humidity_change = average_soil_humidity - previous_average_soil_humidity
 
 # Display the average values on top of the app
 col1, col2, col3 = st.columns(3)
