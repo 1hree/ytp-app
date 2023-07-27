@@ -59,29 +59,44 @@ df['anomaly_soil_humidity_numeric'] = df['anomaly_soil_humidity'].astype(int)
 # Define the SessionState class
 class SessionState:
     def __init__(self):
-        self.prev_average_temperature = None
-        self.prev_average_humidity = None
-        self.prev_average_soil_humidity = None
+        self.average_temperatures = []  # List to store the last five average temperatures
+        self.average_humidities = []   # List to store the last five average humidities
+        self.average_soil_humidities = []  # List to store the last five average soil humidities
+
+    def add_data_point(self, average_temperature, average_humidity, average_soil_humidity):
+        self.average_temperatures.append(average_temperature)
+        self.average_humidities.append(average_humidity)
+        self.average_soil_humidities.append(average_soil_humidity)
+
+        # Keep only the last five data points
+        if len(self.average_temperatures) > 5:
+            self.average_temperatures.pop(0)
+            self.average_humidities.pop(0)
+            self.average_soil_humidities.pop(0)
+
+    def get_average_values(self):
+        # Calculate the average of the last five data points for each metric
+        average_temperature = sum(self.average_temperatures) / len(self.average_temperatures)
+        average_humidity = sum(self.average_humidities) / len(self.average_humidities)
+        average_soil_humidity = sum(self.average_soil_humidities) / len(self.average_soil_humidities)
+        return average_temperature, average_humidity, average_soil_humidity
 
 # Create or get the SessionState object
 session_state = SessionState()
 
+# Add the current data point to the SessionState
+session_state.add_data_point(average_temperature, average_humidity, average_soil_humidity)
 
 # Calculate the changes
-if 'prev_average_temperature' in st.session_state:
-    temperature_change = average_temperature - st.session_state.prev_average_temperature
-    humidity_change = average_humidity - st.session_state.prev_average_humidity
-    soil_humidity_change = average_soil_humidity - st.session_state.prev_average_soil_humidity
+if len(session_state.average_temperatures) == 5:
+    temperature_change = average_temperature - session_state.average_temperatures[0]
+    humidity_change = average_humidity - session_state.average_humidities[0]
+    soil_humidity_change = average_soil_humidity - session_state.average_soil_humidities[0]
 else:
-    # If there are no previous values, set the changes to 0 for the first run
+    # If there are not enough data points yet, set the changes to 0
     temperature_change = 0.0
     humidity_change = 0.0
     soil_humidity_change = 0.0
-
-# Update the previous average values in the session state
-st.session_state.prev_average_temperature = average_temperature
-st.session_state.prev_average_humidity = average_humidity
-st.session_state.prev_average_soil_humidity = average_soil_humidity
 
 # Display the average values on top of the app
 col1, col2, col3 = st.columns(3)
