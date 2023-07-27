@@ -56,6 +56,16 @@ df['anomaly_temperature_numeric'] = df['anomaly_temperature'].astype(int)
 df['anomaly_humidity_numeric'] = df['anomaly_humidity'].astype(int)
 df['anomaly_soil_humidity_numeric'] = df['anomaly_soil_humidity'].astype(int)
 
+# Define the SessionState class
+class SessionState:
+    def __init__(self):
+        self.prev_average_temperature = None
+        self.prev_average_humidity = None
+        self.prev_average_soil_humidity = None
+
+# Create or get the SessionState object
+session_state = SessionState()
+
 # Calculate the changes
 if session_state.prev_average_temperature is not None:
     temperature_change = average_temperature - session_state.prev_average_temperature
@@ -66,6 +76,11 @@ else:
     temperature_change = 0.0
     humidity_change = 0.0
     soil_humidity_change = 0.0
+
+# Update the previous average values in the session state
+session_state.prev_average_temperature = average_temperature
+session_state.prev_average_humidity = average_humidity
+session_state.prev_average_soil_humidity = average_soil_humidity
 
 # Display the average values on top of the app
 col1, col2, col3 = st.columns(3)
