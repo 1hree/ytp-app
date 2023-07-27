@@ -6,13 +6,13 @@ import streamlit as st
 from flightsql import FlightSQLClient
 
 # Set InfluxDB token
-os.environ['INFLUXDB_TOKEN'] = 'mYeX6-jJvpS0Laxo9Ws-fwBuGiq2dMA-97QTCWOJNl6URXCLdlrmPIqHTWnnq8E4NDMnNWy4JO7bsbXoAnjrTQ=='
+os.environ['INFLUXDB_TOKEN'] = 'nlB-BNXCJm4vE-fjamTw26-gDDrsWRb3Q18DudUtJllLMnAOj3R5QcTiWCy10M8gR0mRO4dXZXug_SbCYLeuBQ=='
 st.set_option('deprecation.showPyplotGlobalUse', False)
 
 # Define the query
 query = """SELECT *
-FROM "esp32_sensor_full"
-WHERE time >= now() - interval '10 minutes'
+FROM "esp_sensor_final"
+WHERE time >= now() - interval '60 minutes'
 """
 
 
@@ -20,7 +20,7 @@ WHERE time >= now() - interval '10 minutes'
 query_client = FlightSQLClient(
     host="us-east-1-1.aws.cloud2.influxdata.com",
     token=os.environ.get("INFLUXDB_TOKEN"),
-    metadata={"bucket-name": "sensor_ytp"}
+    metadata={"bucket-name": "sensor_processed"}
 )
 
 # Function to fetch data and process it
@@ -136,6 +136,7 @@ plt.title('Anomaly Detection over Time', fontsize=14)
 plt.legend(fontsize=10)
 plt.tight_layout()
 st.pyplot()
+
 
 
 
