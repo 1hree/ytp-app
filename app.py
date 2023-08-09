@@ -12,7 +12,7 @@ st.set_option('deprecation.showPyplotGlobalUse', False)
 # Define the query
 query = """SELECT *
 FROM "esp_sensor_final"
-WHERE time >= now() - interval '60 minutes'
+WHERE time >= now() - interval '30 days'
 """
 
 
